@@ -22,6 +22,7 @@ public class WaiterCall {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean dismissed = false;
 

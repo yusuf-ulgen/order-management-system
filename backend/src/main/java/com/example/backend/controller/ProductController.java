@@ -41,6 +41,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product productRequest) {
         if (productRequest.getCategory() != null && productRequest.getCategory().getId() != null) {
+            @SuppressWarnings("null")
             Category category = categoryRepository.findById(productRequest.getCategory().getId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             productRequest.setCategory(category);
@@ -52,6 +53,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id,
             @RequestBody Product productDetails) {
+        @SuppressWarnings("null")
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -62,6 +64,7 @@ public class ProductController {
         product.setAvailable(productDetails.isAvailable());
 
         if (productDetails.getCategory() != null && productDetails.getCategory().getId() != null) {
+            @SuppressWarnings("null")
             Category category = categoryRepository.findById(productDetails.getCategory().getId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             product.setCategory(category);
@@ -71,8 +74,10 @@ public class ProductController {
     }
 
     // Ürünü sil
+    @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        @SuppressWarnings("null")
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         productRepository.delete(product);
@@ -80,6 +85,7 @@ public class ProductController {
     }
 
     // Ürünü ID'ye göre getir
+    @SuppressWarnings("null")
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productRepository.findById(id)

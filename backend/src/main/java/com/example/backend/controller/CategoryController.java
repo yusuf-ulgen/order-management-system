@@ -5,7 +5,6 @@ import com.example.backend.repository.CategoryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @RestController
@@ -22,23 +21,29 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryRepository.save(category);
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        @SuppressWarnings("null")
+        Category savedCategory = categoryRepository.save(category);
+        return ResponseEntity.ok(savedCategory);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
+        @SuppressWarnings("null")
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         category.setName(categoryDetails.getName());
         category.setDescription(categoryDetails.getDescription());
 
-        return ResponseEntity.ok(categoryRepository.save(category));
+        Category updatedCategory = categoryRepository.save(category);
+        return ResponseEntity.ok(updatedCategory);
     }
 
+    @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        @SuppressWarnings("null")
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 

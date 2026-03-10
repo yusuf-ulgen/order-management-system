@@ -20,6 +20,7 @@ public class RestaurantTableController {
         return tableRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantTable> getTableById(@PathVariable Long id) {
         return tableRepository.findById(id)
@@ -35,6 +36,7 @@ public class RestaurantTableController {
         return tableRepository.save(table);
     }
 
+    @SuppressWarnings("null")
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantTable> updateTable(@PathVariable Long id,
             @RequestBody RestaurantTable tableDetails) {
@@ -46,6 +48,7 @@ public class RestaurantTableController {
         }).orElseThrow(() -> new RuntimeException("Table not found"));
     }
 
+    @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTable(@PathVariable Long id) {
         return tableRepository.findById(id).map((RestaurantTable table) -> {
@@ -54,6 +57,7 @@ public class RestaurantTableController {
         }).orElseThrow(() -> new RuntimeException("Table not found"));
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/{id}/generate-qr")
     public ResponseEntity<RestaurantTable> generateQr(@PathVariable Long id) {
         return tableRepository.findById(id).map((RestaurantTable table) -> {

@@ -42,6 +42,7 @@ public class OrderController {
     // Update specific order status (for Staff Dashboard)
     @PutMapping("/{id}/status")
     public Order updateOrderStatus(@PathVariable Long id, @RequestParam Order.OrderStatus status) {
+        @SuppressWarnings("null")
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
         return orderRepository.save(order);

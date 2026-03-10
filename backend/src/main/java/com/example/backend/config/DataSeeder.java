@@ -13,6 +13,7 @@ import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import java.util.Objects;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -36,28 +37,32 @@ public class DataSeeder implements CommandLineRunner {
         public void run(String... args) throws Exception {
                 // Admin kullanıcı yoksa oluştur
                 if (!userRepository.existsByUsername("admin")) {
-                        userRepository.save(User.builder()
+                        userRepository.save(Objects.requireNonNull(User.builder()
                                         .username("admin")
                                         .password("admin123")
                                         .role(User.Role.ADMIN)
                                         .active(true)
-                                        .build());
+                                        .build()));
                         System.out.println("👤 DataSeeder: Admin kullanıcı oluşturuldu (admin/admin123)");
                 }
 
                 // Varsayılan Site Ayarları (Eğer boşsa)
                 if (siteSettingsRepository.count() == 0) {
                         System.out.println("⚙️ DataSeeder: Varsayılan site ayarları yükleniyor...");
-                        siteSettingsRepository.save(new SiteSettings(null, "restaurant_name", "QR Sipariş Sistemi",
-                                        "Sitede görünen restoran adı"));
-                        siteSettingsRepository.save(new SiteSettings(null, "restaurant_logo", "🌿",
-                                        "Sitede görünen logo (emoji veya URL)"));
-                        siteSettingsRepository.save(new SiteSettings(null, "contact_phone", "+90 555 123 4567",
-                                        "Siparişler sayfasındaki iletişim no"));
-                        siteSettingsRepository.save(new SiteSettings(null, "contact_address",
-                                        "Atatürk Mah. Restoran Sok. No:1", "İletişim Adresi"));
-                        siteSettingsRepository.save(
-                                        new SiteSettings(null, "home_hero_bg", "", "Ana sayfa arkaplan görsel URL'si"));
+                        siteSettingsRepository.save(Objects
+                                        .requireNonNull(new SiteSettings(null, "restaurant_name", "QR Sipariş Sistemi",
+                                                        "Sitede görünen restoran adı")));
+                        siteSettingsRepository
+                                        .save(Objects.requireNonNull(new SiteSettings(null, "restaurant_logo", "🌿",
+                                                        "Sitede görünen logo (emoji veya URL)")));
+                        siteSettingsRepository.save(Objects
+                                        .requireNonNull(new SiteSettings(null, "contact_phone", "+90 555 123 4567",
+                                                        "Siparişler sayfasındaki iletişim no")));
+                        siteSettingsRepository.save(Objects.requireNonNull(new SiteSettings(null, "contact_address",
+                                        "Atatürk Mah. Restoran Sok. No:1", "İletişim Adresi")));
+                        siteSettingsRepository.save(Objects.requireNonNull(
+                                        new SiteSettings(null, "home_hero_bg", "",
+                                                        "Ana sayfa arkaplan görsel URL'si")));
                 }
 
                 if (categoryRepository.count() == 0) {
@@ -65,25 +70,30 @@ public class DataSeeder implements CommandLineRunner {
 
                         // 1. Masaları ekle (10 masa)
                         for (int i = 1; i <= 10; i++) {
-                                tableRepository.save(RestaurantTable.builder()
+                                tableRepository.save(Objects.requireNonNull(RestaurantTable.builder()
                                                 .tableNumber("Masa " + i)
                                                 .qrCodeUrl("http://localhost:3000/menu?table=Masa+" + i)
                                                 .occupied(false)
-                                                .build());
+                                                .build()));
 
                         }
 
                         // 2. Kategoriler
                         Category sicak = categoryRepository
-                                        .save(new Category(null, "Sıcak İçecekler", "Çay, Kahve vb.", null));
+                                        .save(Objects.requireNonNull(
+                                                        new Category(null, "Sıcak İçecekler", "Çay, Kahve vb.", null)));
                         Category soguk = categoryRepository
-                                        .save(new Category(null, "Soğuk İçecekler", "Kola, Ayran, Limonata", null));
+                                        .save(Objects.requireNonNull(new Category(null, "Soğuk İçecekler",
+                                                        "Kola, Ayran, Limonata", null)));
                         Category tatli = categoryRepository
-                                        .save(new Category(null, "Tatlılar", "Lezzetli tatlı çeşitleri", null));
+                                        .save(Objects.requireNonNull(new Category(null, "Tatlılar",
+                                                        "Lezzetli tatlı çeşitleri", null)));
                         Category ana = categoryRepository
-                                        .save(new Category(null, "Ana Yemekler", "Doyurucu ana öğünler", null));
+                                        .save(Objects.requireNonNull(new Category(null, "Ana Yemekler",
+                                                        "Doyurucu ana öğünler", null)));
                         Category pizza = categoryRepository
-                                        .save(new Category(null, "Pizza", "Çeşitli pizza seçenekleri", null));
+                                        .save(Objects.requireNonNull(new Category(null, "Pizza",
+                                                        "Çeşitli pizza seçenekleri", null)));
 
                         // 3. Ürünler
                         // Sıcak İçecekler
@@ -172,7 +182,7 @@ public class DataSeeder implements CommandLineRunner {
                                                 break;
                                 }
                                 if (updated) {
-                                        productRepository.save(p);
+                                        productRepository.save(Objects.requireNonNull(p));
                                 }
                         }
                         System.out.println("✅ DataSeeder: Görsel düzeltmeleri tamamlandı.");
@@ -180,6 +190,7 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         private void kaydet(String name, String desc, double price, String imageUrl, Category cat) {
-                productRepository.save(new Product(null, name, desc, price, imageUrl, cat, true));
+                productRepository.save(
+                                Objects.requireNonNull(new Product(null, name, desc, price, imageUrl, cat, true)));
         }
 }
