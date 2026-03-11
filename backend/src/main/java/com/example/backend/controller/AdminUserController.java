@@ -16,6 +16,7 @@ import org.springframework.lang.NonNull;
 public class AdminUserController {
 
     private final UserRepository userRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<User> getStaffUsers() {
@@ -38,7 +39,7 @@ public class AdminUserController {
 
         User staff = new User();
         staff.setUsername(username);
-        staff.setPassword(password);
+        staff.setPassword(passwordEncoder.encode(password));
         staff.setRole(User.Role.STAFF);
         staff.setActive(true);
 

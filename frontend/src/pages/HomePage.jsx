@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const TABLES = ['Masa 1', 'Masa 2', 'Masa 3', 'Masa 4', 'Masa 5'];
+
 
 const HomePage = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const [selectedTable, setSelectedTable] = useState('Masa 1');
     const [siteSettings, setSiteSettings] = useState(null);
 
     React.useEffect(() => {
@@ -24,30 +23,6 @@ const HomePage = () => {
     }, []);
 
     const sections = [
-        {
-            title: t('home.customerSection'),
-            subtitle: t('home.customerSubtitle'),
-            icon: '🍽️',
-            color: 'from-[#2e7d32] to-[#1b5e20]',
-            border: 'border-[#4caf50]',
-            links: [
-                {
-                    label: t('home.goToMenu'),
-                    desc: t('home.menuDesc'),
-                    icon: '🍜',
-                    action: () => {
-                        sessionStorage.setItem('tableNumber', selectedTable);
-                        navigate(`/menu?table=${encodeURIComponent(selectedTable)}`);
-                    },
-                },
-                {
-                    label: t('home.orderStatus'),
-                    desc: t('home.orderStatusDesc'),
-                    icon: '📋',
-                    action: () => navigate(`/order-status?table=${encodeURIComponent(selectedTable)}`),
-                },
-            ],
-        },
         {
             title: t('home.staffSection'),
             subtitle: t('home.staffSubtitle'),
@@ -109,29 +84,8 @@ const HomePage = () => {
                 <div className="mt-4 w-24 h-1 bg-[#4caf50] mx-auto rounded-full opacity-60"></div>
             </div>
 
-            {/* Table Selector */}
-            <div className="mb-8 bg-[rgba(0,0,0,0.35)] rounded-2xl px-6 py-4 border border-[rgba(255,255,255,0.1)] backdrop-blur-sm w-full max-w-xl">
-                <label className="block text-[#ffcc80] text-sm font-bold mb-2 tracking-wider uppercase">
-                    🪑 {t('home.tableSimulator')}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                    {TABLES.map(t => (
-                        <button
-                            key={t}
-                            onClick={() => setSelectedTable(t)}
-                            className={`px-4 py-2 rounded-full text-sm font-bold border-2 transition-all ${selectedTable === t
-                                ? 'bg-[#4caf50] text-white border-[#81c784] shadow-[0_0_10px_rgba(76,175,80,0.5)]'
-                                : 'bg-[#3e2723] text-[#d7ccc8] border-[#5d4037] hover:bg-[#4e342e]'
-                                }`}
-                        >
-                            {t}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
             {/* Role Sections */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
                 {sections.map(section => (
                     <div
                         key={section.title}

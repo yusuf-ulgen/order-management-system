@@ -19,13 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final UserRepository userRepository;
-
     private final JwtUtil jwtUtil;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         return userRepository.findByUsernameAndActiveTrue(request.getUsername())
-                .filter(user -> user.getPassword().equals(request.getPassword()))
+                .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()))
                 .map(user -> {
                     String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
                     return ResponseEntity.ok(new AuthResponse(token, "Login successful"));

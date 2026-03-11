@@ -12,6 +12,7 @@ import com.example.backend.repository.SiteSettingsRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.util.Objects;
 
@@ -33,17 +34,30 @@ public class DataSeeder implements CommandLineRunner {
         @Autowired
         private UserRepository userRepository;
 
+        @Autowired
+        private PasswordEncoder passwordEncoder;
+
         @Override
         public void run(String... args) throws Exception {
                 // Admin kullanıcı yoksa oluştur
                 if (!userRepository.existsByUsername("admin")) {
                         userRepository.save(Objects.requireNonNull(User.builder()
                                         .username("admin")
-                                        .password("admin123")
+                                        .password(passwordEncoder.encode("admin123"))
                                         .role(User.Role.ADMIN)
                                         .active(true)
                                         .build()));
-                        System.out.println("👤 DataSeeder: Admin kullanıcı oluşturuldu (admin/admin123)");
+                        System.out.println("👤 DataSeeder: Admin kullanıcı oluşturuldu (admin/admin123 - Encrypted)");
+                } else {
+                        // Mevcut admin şifresini kontrol et ve gerekirse şifrele (Eski sürümlerden
+                        // geçiş için)
+                        userRepository.findByUsernameAndActiveTrue("admin").ifPresent(admin -> {
+                                if ("admin123".equals(admin.getPassword())) {
+                                        admin.setPassword(passwordEncoder.encode("admin123"));
+                                        userRepository.save(admin);
+                                        System.out.println("🔐 DataSeeder: Mevcut admin şifresi şifrelendi.");
+                                }
+                        });
                 }
 
                 // Varsayılan Site Ayarları (Eğer boşsa)
@@ -154,6 +168,17 @@ public class DataSeeder implements CommandLineRunner {
                         System.out.println("✅ DataSeeder: 5 kategori, 15 ürün, 10 masa eklendi!");
                 } else {
                         System.out.println("ℹ️ DataSeeder: Veritabanında zaten veri var, seed atlandı.");
+
+                        // Mevcut verilerde varsa STAFF hesabı da şifreli oluştur (Garsonlar için)
+                        if (!userRepository.existsByUsername("garson")) {
+                                userRepository.save(User.builder()
+                                                .username("garson")
+                                                .password(passwordEncoder.encode("garson"))
+                                                .role(User.Role.STAFF)
+                                                .active(true)
+                                                .build());
+                        }
+
                         System.out.println("🔧 DataSeeder: Mevcut veriler için hatalı görseller düzeltiliyor...");
 
                         java.util.List<Product> products = productRepository.findAll();
