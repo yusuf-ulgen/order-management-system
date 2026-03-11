@@ -11,7 +11,6 @@ import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/waiter-calls")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class WaiterCallController {
 

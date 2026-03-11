@@ -11,7 +11,6 @@ import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/admin/users")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AdminUserController {
 

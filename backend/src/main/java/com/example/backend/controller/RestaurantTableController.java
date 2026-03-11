@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tables")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class RestaurantTableController {
 

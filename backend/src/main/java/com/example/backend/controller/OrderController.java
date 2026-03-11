@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*") // Allow React to connect
 @RequiredArgsConstructor
 public class OrderController {
 

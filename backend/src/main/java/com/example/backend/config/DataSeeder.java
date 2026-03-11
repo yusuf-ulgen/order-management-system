@@ -105,7 +105,7 @@ public class DataSeeder implements CommandLineRunner {
                                         .save(new Category(null, "Sıcak İçecekler", "Çay, Kahve", null));
                         Category soguk = categoryRepository
                                         .save(new Category(null, "Soğuk İçecekler", "Kola, Ayran", null));
-                        Category tatli = categoryRepository.save(new Category(null, "Tatlılar", "Lezzetler", null));
+                        categoryRepository.save(new Category(null, "Tatlılar", "Lezzetler", null));
                         Category ana = categoryRepository.save(new Category(null, "Ana Yemekler", "Doyurucu", null));
                         Category pizza = categoryRepository.save(new Category(null, "Pizza", "Pizzalar", null));
 

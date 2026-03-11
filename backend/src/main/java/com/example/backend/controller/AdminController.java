@@ -15,7 +15,6 @@ import com.example.backend.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AdminController {
 
