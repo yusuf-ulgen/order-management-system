@@ -5,9 +5,10 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # 2. Aşama: Uygulamayı çalıştırma (Run)
-FROM openjdk:17-jdk-slim
+# 'openjdk' yerine güncel ve güvenilir 'eclipse-temurin' kullanıyoruz
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-# Render'ın 512MB RAM limitine uygun bellek ayarı (-Xmx300m)
+# RAM limitini yönetmek için -Xmx300m hâlâ kritik
 ENTRYPOINT ["java", "-Xmx300m", "-jar", "app.jar"]
