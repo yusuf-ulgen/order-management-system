@@ -3,13 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 
-const STATUS_CONFIG = {
-    NEW: { labelKey: 'orderStatus.received', color: 'bg-blue-100 text-blue-700 border-blue-300', icon: '📋', step: 1 },
-    PREPARING: { labelKey: 'orderStatus.preparing', color: 'bg-yellow-100 text-yellow-700 border-yellow-300', icon: '👨‍🍳', step: 2 },
-    COMPLETED: { labelKey: 'orderStatus.delivered', color: 'bg-green-100 text-green-700 border-green-300', icon: '✅', step: 3 },
-    CANCELLED: { labelKey: 'common.cancel', color: 'bg-red-100 text-red-700 border-red-300', icon: '❌', step: 0 },
-};
-
 const OrderStatusPage = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,16 +10,15 @@ const OrderStatusPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const tableNumber = queryParams.get('table') || sessionStorage.getItem('tableNumber') || '';
+    const tableNumber = queryParams.get('table') || sessionStorage.getItem('tableNumber') || 'Table 1';
 
     const fetchOrders = async () => {
         try {
             const res = await api.get('/orders');
-            // Filter orders for this table that are not completed older than 2 hours
             const myOrders = res.data
                 .filter(o => o.tableNumber === tableNumber)
-                .sort((a, b) => b.id - a.id) // newest first
-                .slice(0, 5); // show last 5
+                .sort((a, b) => b.id - a.id)
+                .slice(0, 5);
             setOrders(myOrders);
         } catch (e) {
             console.error('Error fetching orders:', e);
@@ -37,109 +29,106 @@ const OrderStatusPage = () => {
 
     useEffect(() => {
         fetchOrders();
-        const interval = setInterval(fetchOrders, 5000); // poll every 5s
+        const interval = setInterval(fetchOrders, 5000);
         return () => clearInterval(interval);
     }, [tableNumber]);
 
+    const BgOrnaments = () => (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5 select-none hover:opacity-10 transition-opacity">
+            <div className="absolute top-10 left-10 transform -rotate-12">
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="white"><path d="M11,9H9V2H7V9H5V2H3V9c0,2.12,1.66,3.84,3.75,3.97V22h2.5v-9.03C11.34,12.84,13,11.12,13,9V2h-2V9z M16,6v8h3v8h2.5V2 c-3.04,0-5.5,2.46-5.5,4z"/></svg>
+            </div>
+            <div className="absolute bottom-20 right-10 transform rotate-12">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="white"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>
+            </div>
+        </div>
+    );
+
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen theme-leaf-bg">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-[#81c784]"></div>
+            <div className="flex justify-center items-center h-screen bg-[#061e14]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-[#c5a059]"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen theme-leaf-bg pb-10">
-            <header className="theme-wood-bg text-[#f5f5f5] p-5 sticky top-0 z-20 shadow-[0_4px_15px_rgba(0,0,0,0.6)] flex items-center border-b-[3px] border-[#3e2723]">
-                <button onClick={() => navigate(-1)} className="mr-4 p-2 bg-[#2e4c27] hover:bg-[#388e3c] rounded-full border border-[#81c784] shadow-inner transition active:scale-95 text-[#dcedc8]">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-                </button>
+        <div className="min-h-screen bg-[#061e14] relative flex flex-col font-serif">
+            <BgOrnaments />
+            
+            {/* Header */}
+            <header className="relative z-10 p-6 flex justify-between items-center max-w-4xl mx-auto w-full">
                 <div>
-                    <h1 className="text-xl font-bold tracking-widest drop-shadow-md">{t('orderStatus.title')}</h1>
-                    <p className="text-xs text-[#ffcc80] mt-0.5">{tableNumber}</p>
+                    <h1 className="text-2xl font-bold text-white tracking-tight">Sipariş Durumu</h1>
+                    <p className="text-[#c5a059] text-xs mt-0.5 tracking-widest uppercase opacity-70">{tableNumber}</p>
                 </div>
-                <button onClick={fetchOrders} className="ml-auto p-2 bg-[#2e4c27] hover:bg-[#388e3c] rounded-full border border-[#81c784] transition active:scale-95" title={t('orderStatus.refresh')}>
-                    <svg className="w-5 h-5 text-[#dcedc8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                <button onClick={fetchOrders} className="w-10 h-10 border border-[#c5a059]/30 rounded-full flex items-center justify-center text-[#c5a059] hover:bg-[#c5a059]/10 transition-colors">
+                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                 </button>
             </header>
 
-            <div className="p-4 max-w-lg mx-auto space-y-4">
-                {orders.length === 0 ? (
-                    <div className="text-center py-20 bg-[rgba(0,0,0,0.35)] rounded-2xl border border-[rgba(255,255,255,0.1)] mt-6 backdrop-blur-sm">
-                        <svg className="w-20 h-20 mx-auto text-[#5d4037] mb-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                        <h2 className="text-xl font-bold text-[#f5f5f5] mb-2">{t('orderStatus.noOrders')}</h2>
-                        <p className="text-[#d7ccc8] mb-6">{t('orderStatus.noOrders')}</p>
-                        <button onClick={() => navigate('/menu')} className="bg-[#4caf50] text-white px-8 py-3 rounded-xl border border-[#81c784] font-bold shadow-lg hover:bg-[#388e3c] transition active:scale-95">{t('home.goToMenu')}</button>
-                    </div>
-                ) : (
-                    orders.map(order => {
-                        const cfg = STATUS_CONFIG[order.status] || STATUS_CONFIG.NEW;
-                        return (
-                            <div key={order.id} className="theme-wood-card rounded-2xl shadow-xl border-2 border-[#5d4037] overflow-hidden">
-                                <div className="theme-card-inner bg-[#fff8e1] p-5">
-                                    {/* Order Header */}
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div>
-                                            <span className="text-xs font-bold text-[#5d4037] uppercase tracking-widest">#{order.id}</span>
-                                            <div className={`inline-flex items-center gap-2 mt-1 px-3 py-1 rounded-full text-sm font-extrabold border-2 ${cfg.color}`}>
-                                                <span>{cfg.icon}</span>
-                                                <span>{t(cfg.labelKey)}</span>
-                                            </div>
-                                        </div>
-                                        <span className="font-black text-[#d84315] text-xl">₺{Number(order.totalPrice || 0).toFixed(2)}</span>
-                                    </div>
+            {/* Content Area */}
+            <main className="flex-1 relative z-10 flex flex-col items-center justify-center px-6">
+                
+                {/* Gold Border Top */}
+                <div className="w-full max-w-3xl flex items-center gap-4 mb-4">
+                    <div className="flex-1 h-[2px] bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+                    <div className="rotate-45 w-2 h-2 border border-[#c5a059]"></div>
+                    <div className="flex-1 h-[2px] bg-gradient-to-l from-transparent via-[#c5a059] to-transparent"></div>
+                </div>
 
-                                    {/* Progress Bar */}
-                                    {order.status !== 'CANCELLED' && (
-                                        <div className="mb-4">
-                                            <div className="flex justify-between mb-2">
-                                                {[t('orderStatus.received'), t('orderStatus.preparing'), t('orderStatus.delivered')].map((step, i) => (
-                                                    <div key={i} className={`text-xs font-bold ${cfg.step > i ? 'text-[#4caf50]' : 'text-[#bcaaa4]'}`}>{step}</div>
-                                                ))}
-                                            </div>
-                                            <div className="w-full bg-[#d7ccc8] rounded-full h-3 border border-[#bcaaa4]">
-                                                <div
-                                                    className="bg-[#4caf50] h-3 rounded-full transition-all duration-700 ease-in-out"
-                                                    style={{ width: `${(cfg.step / 3) * 100}%` }}
-                                                ></div>
-                                            </div>
-                                        </div>
-                                    )}
+                {/* Textured Central Panel */}
+                <div className="w-full max-w-3xl aspect-[16/9] md:aspect-[21/9] bg-[#f9f7f2] rounded-3xl relative overflow-hidden flex flex-col items-center justify-center p-8 bg-ornament shadow-2xl border border-white/20">
+                    
+                    {/* Decorative Veggies (SVG) */}
+                    <div className="absolute top-10 left-10 opacity-20 transform -rotate-12 scale-150">🍅</div>
+                    <div className="absolute bottom-10 right-10 opacity-20 transform rotate-45 scale-150">🌿</div>
+                    <div className="absolute top-1/4 right-10 opacity-10">🥣</div>
+                    <div className="absolute bottom-1/4 left-10 opacity-10">🥄</div>
 
-                                    {/* Items */}
-                                    <ul className="space-y-2 border-t-2 border-[#ffe0b2] pt-3">
-                                        {order.items?.map(item => (
-                                            <li key={item.id} className="flex justify-between items-start text-sm">
-                                                <div className="flex items-start gap-2">
-                                                    <span className="bg-[#5d4037] text-white px-2 py-0.5 rounded-md text-xs font-black">{item.quantity}x</span>
-                                                    <div>
-                                                        <span className="font-bold text-[#4e342e]">{item.product?.name}</span>
-                                                    </div>
-                                                </div>
-                                                <span className="font-bold text-[#5d4037]">₺{Number((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    {order.note && (
-                                        <div className="mt-4 bg-[#fff3e0] border-l-4 border-[#ffb74d] p-3 rounded-r-md">
-                                            <p className="text-xs font-bold text-[#e65100] mb-1">{t('cart.note')}:</p>
-                                            <p className="text-sm text-[#6d4c41] italic">{order.note}</p>
-                                        </div>
-                                    )}
-                                </div>
+                    {orders.length === 0 ? (
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-[#f9f7f2] rounded-2xl border border-[#e0dec5] flex items-center justify-center mx-auto mb-6 shadow-sm">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c5a059/60" strokeWidth="1.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
                             </div>
-                        );
-                    })
-                )}
+                            <h2 className="text-[#061e14] text-3xl font-bold mb-2">Sipariş bulunamadı.</h2>
+                            <p className="text-[#061e14]/40 text-sm italic mb-8 uppercase tracking-widest">Sipariş bulunamadı.</p>
+                            
+                            <button 
+                                onClick={() => navigate('/menu')}
+                                className="group relative bg-[#061e14] px-12 py-4 rounded-xl overflow-hidden shadow-lg active:scale-95 transition-transform"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#0a2e1f] to-[#061e14] opacity-100 group-hover:opacity-90 transition-opacity"></div>
+                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c5a059]/40 to-transparent"></div>
+                                <span className="relative z-10 text-[#c5a059] font-bold tracking-[0.2em] uppercase text-sm">Menüye Git</span>
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="w-full space-y-4 overflow-y-auto max-h-full py-4 px-2 custom-scrollbar">
+                             {orders.map(order => (
+                                 <div key={order.id} className="bg-white/80 border border-[#e0dec5] rounded-2xl p-4 flex justify-between items-center shadow-sm">
+                                     <div>
+                                         <div className="text-[#061e14] font-bold text-sm">Sipariş #{order.id}</div>
+                                         <div className="text-[#c5a059] text-xs font-bold uppercase mt-1 tracking-tighter">{order.status}</div>
+                                     </div>
+                                     <div className="text-right">
+                                         <div className="text-[#061e14] font-bold">₺{Number(order.totalPrice).toFixed(2)}</div>
+                                         <div className="text-[10px] text-gray-400">{new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                     </div>
+                                 </div>
+                             ))}
+                        </div>
+                    )}
+                </div>
 
-                <button
-                    onClick={() => navigate('/menu')}
-                    className="w-full mt-4 theme-wood-bg text-[#ffcc80] border-2 border-[#ffcc80] rounded-xl py-3 font-bold text-lg shadow hover:brightness-110 active:scale-95 transition"
-                >
-                    {t('home.goToMenu')}
-                </button>
-            </div>
+                {/* Gold Border Bottom */}
+                <div className="w-full max-w-3xl flex items-center gap-4 mt-4">
+                    <div className="flex-1 h-[2px] bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+                    <div className="rotate-45 w-2 h-2 border border-[#c5a059]"></div>
+                    <div className="flex-1 h-[2px] bg-gradient-to-l from-transparent via-[#c5a059] to-transparent"></div>
+                </div>
+
+            </main>
         </div>
     );
 };

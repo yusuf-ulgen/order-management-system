@@ -9,8 +9,6 @@ const AdminTables = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentTable, setCurrentTable] = useState({ tableNumber: '' });
 
-    // Assuming frontend is running where customers access it.
-    // In production, this would be an environment variable.
     const frontendBaseUrl = window.location.origin;
 
     useEffect(() => {
@@ -32,7 +30,6 @@ const AdminTables = () => {
         e.preventDefault();
         try {
             if (currentTable.id) {
-                // Not supported in backend directly but usually handled
                 const res = await api.put(`/tables/${currentTable.id}`, currentTable);
                 setTables(tables.map(t => t.id === currentTable.id ? res.data : t));
             } else {
@@ -43,7 +40,6 @@ const AdminTables = () => {
             setCurrentTable({ tableNumber: '' });
         } catch (error) {
             console.error("Error saving table:", error);
-            alert(t('admin.errorSavingTable'));
         }
     };
 
@@ -54,7 +50,6 @@ const AdminTables = () => {
                 setTables(tables.filter(t => t.id !== id));
             } catch (error) {
                 console.error("Error deleting table:", error);
-                alert(t('admin.errorDeletingTable'));
             }
         }
     };
@@ -63,111 +58,103 @@ const AdminTables = () => {
         try {
             const res = await api.post(`/tables/${id}/generate-qr`);
             setTables(tables.map(t => t.id === id ? res.data : t));
-            alert(t('admin.qrSuccess'));
         } catch (error) {
             console.error("Error generating QR:", error);
-            alert(t('admin.qrError'));
         }
     };
 
-    if (loading) return <div className="p-4 text-gray-500">{t('admin.loading')}</div>;
+    if (loading) return <div className="p-8 text-[#c5a059] font-bold animate-pulse">Yükleniyor...</div>;
 
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-8 bg-[#4e342e] theme-wood-bg p-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-2 border-[#3e2723]">
-                <h1 className="text-3xl font-bold text-[#f5f5f5] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] ml-2">{t('admin.tablesAndQr')}</h1>
-                <button
+        <div className="relative h-full flex flex-col">
+            {/* Header Area */}
+            <div className="flex justify-between items-center mb-10 relative z-10">
+                 <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-[#2e1a14]/20 border border-[#c5a059]/40 rounded-full flex items-center justify-center text-[#c5a059] shadow-lg">☕</div>
+                      <h2 className="text-2xl font-bold text-[#2e1a14] tracking-tight">Masalar & QR Kodlar</h2>
+                 </div>
+                 <button
                     onClick={() => { setCurrentTable({ tableNumber: '' }); setIsEditing(true); }}
-                    className="bg-[#3e2723] hover:bg-[#5d4037] text-[#efebe9] border border-[#795548] px-4 py-2 rounded-lg font-medium shadow-inner transition flex items-center gap-2"
+                    className="px-8 py-3 bg-[#2e1a14] hover:bg-[#1a0f0b] text-[#f5f5dc] font-bold rounded-2xl shadow-xl transition-all border border-[#c5a059]/40 flex items-center gap-3 group"
                 >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-                    {t('admin.addTable')}
+                    <span className="text-xl group-hover:rotate-90 transition-transform">+</span>
+                    <span className="uppercase tracking-widest text-[10px]">Yeni Masa Ekle</span>
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {tables.map(table => (
-                    <div key={table.id} className="theme-wood-card p-6 flex flex-col hover:scale-[1.02] transition-transform duration-300">
-                        <div className="flex justify-between items-start mb-4 border-b border-[#3e2723] pb-4">
-                            <h3 className="text-2xl font-bold text-[#f5f5f5] drop-shadow-md">{table.tableNumber}</h3>
-                            <button onClick={() => handleDelete(table.id)} className="text-[#e57373] hover:text-[#ef9a9a] p-1 bg-[#3e2723] rounded-full drop-shadow">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
+            <div className="flex-1 overflow-auto relative z-10 pb-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+                    {tables.map(table => (
+                        <div key={table.id} className="bg-[#2e1a14] rounded-[3rem] border border-[#c5a059]/30 shadow-2xl p-8 flex flex-col group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                             <div className="absolute inset-0 bg-wood-pattern opacity-10 pointer-events-none"></div>
+
+                             <div className="flex justify-between items-center mb-6 relative z-10">
+                                  <h3 className="text-2xl font-bold text-[#f5f5dc] tracking-tight">Masa {table.tableNumber}</h3>
+                                  <button 
+                                      onClick={() => handleDelete(table.id)} 
+                                      className="w-10 h-10 bg-black/30 text-red-400 hover:bg-black/50 rounded-full flex items-center justify-center transition-colors border border-red-900/40"
+                                  >
+                                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                  </button>
+                             </div>
+
+                             <div className="flex-1 bg-[#f9f7f2] rounded-3xl p-6 border border-[#c5a059]/20 shadow-inner relative overflow-hidden flex flex-col items-center justify-center space-y-4">
+                                  <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                                  
+                                  <div className="bg-white p-4 rounded-2xl shadow-lg border border-gray-200 relative z-10 group-hover:scale-105 transition-transform duration-500">
+                                       <img
+                                           src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(frontendBaseUrl + '/menu?table=' + table.tableNumber)}`}
+                                           alt="QR"
+                                           className="w-32 h-32"
+                                       />
+                                  </div>
+
+                                  <div className="relative z-10 text-center">
+                                       <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a3a2a]">Menü Linki</span>
+                                       <div className="w-10 h-0.5 bg-[#1a3a2a]/20 mx-auto mt-1"></div>
+                                  </div>
+                             </div>
+
+                             <button
+                                 onClick={() => generateQRUrl(table.id)}
+                                 className="mt-8 w-full bg-[#1a0f0b] border border-[#c5a059]/20 text-[#c5a059] font-bold py-5 rounded-2xl uppercase tracking-widest text-xs hover:bg-black transition-all shadow-xl"
+                             >
+                                 QR Kodu Yenile
+                             </button>
                         </div>
-
-                        <div className="flex-1 flex flex-col items-center justify-center bg-[#f5f5f5] rounded-lg p-4 border-4 border-[#5d4037] mb-6 shadow-inner relative overflow-hidden">
-                            {/* Decorative leaf logic */}
-                            <div className="absolute top-[-10px] left-[-10px] w-12 h-12 bg-[#81c784] rounded-full opacity-20 blur-xl"></div>
-
-                            {table.qrCodeUrl ? (
-                                <div className="text-center">
-                                    <div className="bg-white p-2 rounded-lg shadow-md border-2 border-gray-200">
-                                        <img
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(frontendBaseUrl + '/menu?table=' + table.tableNumber)}`}
-                                            alt="QR"
-                                            className="mx-auto"
-                                        />
-                                    </div>
-                                    <a
-                                        href={frontendBaseUrl + '/menu?table=' + table.tableNumber}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="text-xs text-[#2e7d32] font-bold hover:underline break-all mt-3 block bg-green-50 py-1 px-2 rounded"
-                                    >
-                                        {t('admin.menuLink')}
-                                    </a>
-                                </div>
-                            ) : (
-                                <div className="text-gray-400 text-sm text-center font-bold">
-                                    <svg className="w-16 h-16 mx-auto mb-2 opacity-30 text-[#4e342e]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
-                                    Henüz QR Kod Üretilmedi
-                                </div>
-                            )}
-                        </div>
-
-                        <button
-                            onClick={() => generateQRUrl(table.id)}
-                            className="w-full bg-[#3e2723] border border-[#5d4037] text-[#ffcc80] font-bold py-3 rounded-lg hover:bg-[#4e342e] transition shadow-md"
-                        >
-                            {table.qrCodeUrl ? t('admin.refreshQr') : t('admin.generateNow')}
-                        </button>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
-            {/* Modal for Create */}
+            {/* Modal - Premium Re-design */}
             {isEditing && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                    <div className="bg-[#f5f5f5] rounded-xl shadow-2xl w-full max-w-sm p-6 border-4 border-[#5d4037]">
-                        <div className="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
-                            <h2 className="text-2xl font-bold text-[#4e342e]">{t('admin.addTable')}</h2>
-                            <button onClick={() => setIsEditing(false)} className="text-gray-500 hover:text-red-600 cursor-pointer">
-                                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            </button>
-                        </div>
-                        <form onSubmit={handleSave}>
-                            <div className="mb-6">
-                                <label className="block text-sm font-bold text-gray-700 mb-2">{t('admin.tableNameLabel')}</label>
+                <div className="fixed inset-0 bg-[#2e1a14]/80 backdrop-blur-md flex items-center justify-center p-6 z-[100] animate-fade-in">
+                    <div className="bg-[#f9f7f2] rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-[#c5a059]/40 flex flex-col relative">
+                         <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                         
+                         <div className="bg-[#2e1a14] p-8 flex justify-between items-center relative z-10">
+                              <h2 className="text-2xl font-bold text-[#f5f5dc] tracking-tight">Yeni Masa Ekle</h2>
+                              <button onClick={() => setIsEditing(false)} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 text-[#c5a059] hover:bg-black/40 transition-colors">
+                                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                              </button>
+                         </div>
+
+                        <form onSubmit={handleSave} className="p-10 space-y-8 relative z-10">
+                            <div>
+                                <label className="block text-[10px] font-bold text-[#c5a059] mb-4 uppercase tracking-[0.2em] text-center">Masa Numarası veya Adı</label>
                                 <input
                                     type="text"
                                     required
-                                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#5d4037] outline-none font-bold text-lg text-center"
+                                    className="w-full bg-white border border-[#c5a059]/20 rounded-3xl px-6 py-6 focus:border-[#c5a059] outline-none font-bold text-[#2e1a14] shadow-inner text-center text-3xl tracking-widest"
                                     value={currentTable.tableNumber}
-                                    placeholder={t('admin.tableNamePlaceholder')}
+                                    placeholder="01"
                                     onChange={(e) => setCurrentTable({ ...currentTable, tableNumber: e.target.value })}
                                 />
                             </div>
-                            <div className="flex justify-end gap-3 border-t border-gray-300 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsEditing(false)}
-                                    className="px-5 py-2 border-2 border-gray-400 rounded-lg text-gray-700 hover:bg-gray-200 transition font-bold"
-                                >
-                                    {t('admin.cancel')}
-                                </button>
+                            <div className="pt-4 flex justify-center">
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 bg-[#4caf50] text-white rounded-lg hover:bg-[#388e3c] font-bold transition border border-[#2e7d32] shadow"
+                                    className="w-full py-5 bg-[#1a3a2a] hover:bg-[#061e14] text-[#f5f5dc] font-bold rounded-3xl shadow-2xl transition-all border border-[#c5a059]/40 uppercase tracking-widest text-xs"
                                 >
                                     {t('admin.save')}
                                 </button>
@@ -176,6 +163,12 @@ const AdminTables = () => {
                     </div>
                 </div>
             )}
+
+            {/* Süslemeler */}
+            <div className="absolute bottom-6 left-6 pointer-events-none flex items-end gap-2 z-20">
+                 <span className="text-4xl filter drop-shadow-lg">🍅</span>
+                 <span className="text-3xl filter drop-shadow-lg opacity-80">🌿</span>
+            </div>
         </div>
     );
 };

@@ -36,49 +36,68 @@ const AdminDashboard = () => {
         fetchStats();
     }, []);
 
+    const StatCard = ({ icon, label, value, color }) => (
+        <div className="bg-[#2e1a14] rounded-[2rem] border border-[#c5a059]/30 shadow-2xl p-8 flex items-center justify-between relative overflow-hidden group hover:-translate-y-1 transition-all">
+             <div className="absolute inset-0 bg-wood-pattern opacity-10 pointer-events-none"></div>
+             <div>
+                  <p className="text-[#c5a059] text-[10px] font-bold uppercase tracking-[0.2em] mb-2 opacity-80">{label}</p>
+                  <p className="text-3xl font-bold text-[#f5f5dc] tracking-tight">{value}</p>
+             </div>
+             <div className="w-14 h-14 bg-black/20 rounded-2xl flex items-center justify-center border border-[#c5a059]/20 shadow-inner group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">{icon}</span>
+             </div>
+        </div>
+    );
+
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-8 bg-[#4e342e] theme-wood-bg p-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-2 border-[#3e2723]">
-                <h1 className="text-3xl font-bold text-[#f5f5f5] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] ml-2">{t('admin.dashboard')}</h1>
+        <div className="relative h-full flex flex-col space-y-10">
+            {/* Stat Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                <StatCard 
+                    label="Toplam Sipariş" 
+                    value={stats.totalOrders} 
+                    icon="📊"
+                />
+                <StatCard 
+                    label="Toplam Ciro" 
+                    value={`${stats.totalRevenue.toFixed(2)} ₺`} 
+                    icon="💰"
+                />
+                <StatCard 
+                    label="Aktif Ürünler" 
+                    value={stats.activeProducts} 
+                    icon="📦"
+                />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="theme-wood-card p-6 flex items-center">
-                    <div className="bg-[#3e2723] text-[#ffcc80] p-4 rounded-lg mr-4 border border-[#5d4037] shadow-inner">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    </div>
-                    <div>
-                        <div className="text-sm text-[#d7ccc8] font-medium">{t('admin.totalOrders')}</div>
-                        <div className="text-3xl font-bold text-[#ffffff] drop-shadow-md">{stats.totalOrders}</div>
-                    </div>
-                </div>
+            {/* Quick Access Area */}
+            <div className="flex-1 flex flex-col relative z-10">
+                 <div className="bg-[#2e1a14] rounded-t-[2.5rem] border-x border-t border-[#c5a059]/30 p-8 shadow-xl relative overflow-hidden">
+                      <div className="absolute inset-0 bg-wood-pattern opacity-10 pointer-events-none"></div>
+                      <h2 className="text-2xl font-bold text-[#f5f5dc] tracking-tight">Hızlı Erişim</h2>
+                 </div>
+                 <div className="flex-1 bg-[#f9f7f2] rounded-b-[2.5rem] border-x border-b border-[#c5a059]/30 p-10 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                      <div className="relative z-10">
+                           <p className="text-[#2e1a14] text-lg font-medium leading-relaxed opacity-80">
+                               Sol ahşap menüyü kullanarak kategori, ürün ve masalarınızı kolayca yönetebilirsiniz. Detaylı ciro istatistikleri 'Raporlar' bölümünde yer almaktadır.
+                           </p>
 
-                <div className="theme-wood-card p-6 flex items-center">
-                    <div className="bg-[#2e4c27] text-[#aed581] p-4 rounded-lg mr-4 border border-[#4caf50] shadow-inner">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <div className="text-sm text-[#d7ccc8] font-medium">{t('admin.totalRevenue')}</div>
-                        <div className="text-3xl font-bold text-[#ffffff] drop-shadow-md">{stats.totalRevenue.toFixed(2)} ₺</div>
-                    </div>
-                </div>
-
-                <div className="theme-wood-card p-6 flex items-center">
-                    <div className="bg-[#5d4037] text-[#ffb74d] p-4 rounded-lg mr-4 border border-[#795548] shadow-inner">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                    </div>
-                    <div>
-                        <div className="text-sm text-[#d7ccc8] font-medium">{t('admin.activeProducts')}</div>
-                        <div className="text-3xl font-bold text-[#ffffff] drop-shadow-md">{stats.activeProducts}</div>
-                    </div>
-                </div>
+                           {/* Süsleme Çizimleri - Görseldeki gibi basit ikonlar */}
+                           <div className="mt-12 flex justify-center gap-12 opacity-20 filter grayscale contrast-125">
+                                <span className="text-6xl text-[#2e1a14]">🍵</span>
+                                <span className="text-6xl text-[#2e1a14]">👨‍🍳</span>
+                                <span className="text-6xl text-[#2e1a14]">🍴</span>
+                                <span className="text-6xl text-[#2e1a14]">🍕</span>
+                           </div>
+                      </div>
+                 </div>
             </div>
 
-            <div className="theme-wood-card p-6">
-                <h2 className="text-2xl font-bold text-[#f5f5f5] mb-4 drop-shadow-md">{t('admin.quickAccess')}</h2>
-                <div className="flex gap-4">
-                    <p className="text-[#d7ccc8]">{t('admin.quickAccessDesc')}</p>
-                </div>
+            {/* Süslemeler - Görsele Sadık */}
+            <div className="absolute bottom-6 left-6 pointer-events-none flex items-end gap-2 z-20">
+                 <span className="text-4xl filter drop-shadow-lg">🍅</span>
+                 <span className="text-3xl filter drop-shadow-lg opacity-80">🌿</span>
             </div>
         </div>
     );

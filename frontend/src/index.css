@@ -4,57 +4,77 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-[#061e14] text-[#f5f5f5] min-h-screen font-sans;
+    background: radial-gradient(circle at center, #0a2e1f 0%, #061e14 100%);
   }
 }
 
-/* Custom Nature Theme Styles based on the layout image */
-.theme-wood-bg {
-  /* Using a linear gradient with a slight wood-like color to mimic the sidebar */
-  background: linear-gradient(180deg, #704730 0%, #4a2c1b 100%);
-  position: relative;
-  box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.4);
-  border-right: 2px solid #3e2213;
+@layer components {
+  /* Premium Design Tokens */
+  .bg-premium-green {
+    background: linear-gradient(135deg, #0a2e1f 0%, #05180f 100%);
+  }
+
+  .text-premium-gold {
+    color: #c5a059;
+  }
+
+  .border-premium-gold {
+    border-color: #c5a059;
+  }
+
+  .bg-premium-gold {
+    background: linear-gradient(135deg, #d4af37 0%, #c5a059 100%);
+  }
+
+  /* Card Styles */
+  .premium-card {
+    @apply bg-[#f9f7f2] rounded-2xl shadow-xl overflow-hidden border border-[#e0dec5];
+  }
+
+  .premium-card-header {
+    @apply p-6 flex flex-col items-center justify-center text-white;
+  }
+
+  /* Button Styles */
+  .btn-premium-gold {
+    @apply bg-gradient-to-r from-[#d4af37] to-[#c5a059] text-[#061e14] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform active:scale-95;
+  }
+
+  /* Background Ornaments / Texture */
+  .bg-ornament {
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="rgba(255,255,255,0.02)"/></svg>');
+    background-size: 200px 200px;
+  }
+
+  .premium-glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+  }
+
+  .gold-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #c5a059, transparent);
+      width: 100%;
+  }
 }
 
-.theme-leaf-bg {
-  /* Deep green radial gradient resembling a leafy environment */
-  background-color: #1a4f21;
-  background-image: radial-gradient(circle at center, #2e7d32 0%, #103314 100%);
-  position: relative;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Optional leaf pattern overlay via pseudo-element */
-.theme-leaf-bg::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* Soft leaf-like repeating pattern, if available, otherwise just noise/texture */
-  background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M20 0C10 10 10 20 20 40C30 20 30 10 20 0Z" fill="rgba(255,255,255,0.03)"/></svg>');
-  background-size: 60px 60px;
-  opacity: 0.6;
-  pointer-events: none;
+::-webkit-scrollbar-track {
+  background: #061e14;
 }
 
-.theme-wood-card {
-  background: linear-gradient(135deg, #6b4129 0%, #462716 100%);
-  border: 4px solid #381e10;
-  border-radius: 16px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6), 0 8px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+::-webkit-scrollbar-thumb {
+  background: #c5a059;
+  border-radius: 4px;
 }
 
-.theme-wood-card:hover {
-  transform: translateY(-5px);
-  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6), 0 12px 20px rgba(0, 0, 0, 0.4);
-}
-
-.theme-card-inner {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
 }

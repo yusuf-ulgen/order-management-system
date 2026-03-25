@@ -10,10 +10,10 @@ const AdminOrders = () => {
     const [statusFilter, setStatusFilter] = useState('ALL');
 
     const STATUS_LABELS = {
-        NEW: { label: t('admin.statusNew'), color: 'bg-blue-100 text-blue-700 border-blue-300' },
-        PREPARING: { label: t('admin.statusPreparing'), color: 'bg-yellow-100 text-yellow-700 border-yellow-300' },
-        COMPLETED: { label: t('admin.statusCompleted'), color: 'bg-green-100 text-green-700 border-green-300' },
-        CANCELLED: { label: t('admin.statusCancelled'), color: 'bg-red-100 text-red-700 border-red-300' },
+        NEW: { label: t('admin.statusNew'), color: 'bg-blue-500/80 text-white' },
+        PREPARING: { label: t('admin.statusPreparing'), color: 'bg-yellow-600/80 text-white' },
+        COMPLETED: { label: t('admin.statusCompleted'), color: 'bg-green-700/80 text-white' },
+        CANCELLED: { label: t('admin.statusCancelled'), color: 'bg-red-800/80 text-white' },
     };
 
     useEffect(() => {
@@ -33,82 +33,115 @@ const AdminOrders = () => {
     const totalRevenue = filtered.filter(o => o.status === 'COMPLETED')
         .reduce((s, o) => s + (o.totalPrice || 0), 0);
 
-    if (loading) return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-10 w-10 border-b-4 border-[#81c784]"></div></div>;
+    if (loading) return <div className="p-8 text-[#c5a059] font-bold animate-pulse">Yükleniyor...</div>;
 
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-8 bg-[#4e342e] theme-wood-bg p-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-2 border-[#3e2723]">
-                <h1 className="text-3xl font-bold text-[#f5f5f5] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] ml-2">{t('admin.orderHistory')}</h1>
-                <div className="bg-[#3e2723]/50 px-4 py-2 rounded-lg border border-[#795548]/30 shadow-inner flex items-center gap-3">
-                    <div className="text-right">
-                        <div className="text-[#ffcc80] text-xs font-bold uppercase tracking-tighter opacity-70">{t('admin.totalRevenue')}</div>
-                        <div className="text-white font-mono font-bold leading-none">₺{totalRevenue.toFixed(2)}</div>
-                    </div>
-                    <div className="w-[1px] h-8 bg-[#795548]/50"></div>
-                    <div className="text-right">
-                        <div className="text-[#ffcc80] text-xs font-bold uppercase tracking-tighter opacity-70">{t('admin.orders')}</div>
-                        <div className="text-white font-bold leading-none">{filtered.length}</div>
-                    </div>
-                </div>
+        <div className="relative h-full flex flex-col space-y-6">
+            {/* Header / Toolbar Area */}
+            <div className="bg-[#2e1a14] rounded-3xl border border-[#c5a059]/30 shadow-2xl p-4 flex flex-wrap items-center justify-between gap-4 relative overflow-hidden z-10">
+                 <div className="absolute inset-0 bg-wood-pattern opacity-10 pointer-events-none"></div>
+                 
+                 {/* Filters Left */}
+                 <div className="flex items-center gap-3 relative z-10">
+                      <div className="relative">
+                           <input
+                               type="text"
+                               placeholder="Masa veya ürün ara..."
+                               value={search}
+                               onChange={e => setSearch(e.target.value)}
+                               className="bg-black/20 text-[#f5f5dc] border border-[#c5a059]/20 rounded-2xl px-6 py-3 pl-10 text-sm focus:border-[#c5a059] outline-none placeholder-[#c5a059]/30 w-64 shadow-inner font-bold"
+                           />
+                           <span className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30">🔍</span>
+                      </div>
+                      <select
+                          value={statusFilter}
+                          onChange={e => setStatusFilter(e.target.value)}
+                          className="bg-black/20 text-[#f5f5dc] border border-[#c5a059]/20 rounded-2xl px-6 py-3 text-sm focus:border-[#c5a059] outline-none font-bold shadow-inner cursor-pointer"
+                      >
+                          <option value="ALL">Tüm Durumlar</option>
+                          <option value="NEW">{t('admin.statusNew')}</option>
+                          <option value="PREPARING">{t('admin.statusPreparing')}</option>
+                          <option value="COMPLETED">{t('admin.statusCompleted')}</option>
+                          <option value="CANCELLED">{t('admin.statusCancelled')}</option>
+                      </select>
+                 </div>
+
+                 {/* Stats Right */}
+                 <div className="bg-black/30 rounded-2xl border border-[#c5a059]/20 px-6 py-2 flex items-center gap-6 relative z-10 shadow-inner">
+                      <div className="text-right">
+                           <p className="text-[#c5a059] text-[9px] font-bold uppercase tracking-tighter opacity-70">TOPLAM CİRO</p>
+                           <p className="text-xl font-bold text-[#f5f5dc] tabular-nums leading-none mt-1">₺{totalRevenue.toFixed(2)}</p>
+                      </div>
+                      <div className="w-[1px] h-8 bg-[#c5a059]/20"></div>
+                      <div className="text-right">
+                           <p className="text-[#c5a059] text-[9px] font-bold uppercase tracking-tighter opacity-70">SİPARİŞ</p>
+                           <p className="text-xl font-bold text-[#f5f5dc] tabular-nums leading-none mt-1">{filtered.length}</p>
+                      </div>
+                 </div>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3 mb-6">
-                <input
-                    type="text"
-                    placeholder={t('admin.searchPlaceholder')}
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="bg-[#3e2723]/50 text-[#fff8e1] border-2 border-[#5d4037] rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#81c784] placeholder-[#a1887f] w-full md:w-auto shadow-inner"
-                />
-                <select
-                    value={statusFilter}
-                    onChange={e => setStatusFilter(e.target.value)}
-                    className="bg-[#3e2723]/50 text-[#fff8e1] border-2 border-[#5d4037] rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#81c784] shadow-inner"
-                >
-                    <option value="ALL">{t('admin.allStatuses')}</option>
-                    <option value="NEW">{t('admin.statusNew')}</option>
-                    <option value="PREPARING">{t('admin.statusPreparing')}</option>
-                    <option value="COMPLETED">{t('admin.statusCompleted')}</option>
-                    <option value="CANCELLED">{t('admin.statusCancelled')}</option>
-                </select>
+            {/* Orders Table Container */}
+            <div className="flex-1 bg-[#f9f7f2] rounded-[3rem] border border-[#c5a059]/30 shadow-2xl relative overflow-hidden flex flex-col z-10">
+                 <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                 
+                 <div className="bg-[#2e1a14] px-10 py-6 border-b border-[#c5a059]/20">
+                      <div className="grid grid-cols-[1fr,1.5fr,3fr,1.5fr,1.5fr] text-[10px] font-bold text-[#c5a059] uppercase tracking-[0.2em]">
+                           <span>#Sipariş ID</span>
+                           <span className="text-center">Masa</span>
+                           <span className="text-center">Ürünler</span>
+                           <span className="text-center">Tutar</span>
+                           <span className="text-right">Durum</span>
+                      </div>
+                 </div>
+
+                 <div className="flex-1 overflow-auto">
+                      <table className="w-full">
+                           <tbody className="divide-y divide-[#c5a059]/10">
+                                {filtered.map((order, idx) => {
+                                     const cfg = STATUS_LABELS[order.status] || STATUS_LABELS.NEW;
+                                     return (
+                                          <tr key={order.id} className="group hover:bg-[#2e1a14]/5 transition-colors">
+                                               <td className="px-10 py-6 text-sm font-bold text-[#2e1a14] opacity-80 italic">#{order.id}</td>
+                                               <td className="px-10 py-6 text-center text-sm font-bold text-[#2e1a14]">{order.tableNumber}</td>
+                                               <td className="px-10 py-6 text-center text-sm font-medium text-[#2e1a14]/60 italic">
+                                                    <div className="line-clamp-1">
+                                                         {order.items?.map(i => `${i.quantity}x ${i.product?.name}`).join(', ') || '-'}
+                                                    </div>
+                                                    {order.note && <div className="text-[10px] text-[#2e1a14]/40 mt-1 uppercase font-bold tracking-widest">{t('admin.note')}: {order.note}</div>}
+                                               </td>
+                                               <td className="px-10 py-6 text-center text-lg font-bold text-[#1a3a2a]">₺{order.totalPrice?.toFixed(2)}</td>
+                                               <td className="px-10 py-6 text-right">
+                                                    <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg ${cfg.color}`}>
+                                                         {cfg.label}
+                                                    </span>
+                                               </td>
+                                          </tr>
+                                     );
+                                })}
+                                {filtered.length === 0 && (
+                                     <tr>
+                                          <td colSpan="5" className="px-10 py-32 text-center text-[#2e1a14]/40 font-bold italic text-xl">
+                                               {t('admin.noOrders')}
+                                          </td>
+                                     </tr>
+                                )}
+                           </tbody>
+                      </table>
+                 </div>
+
+                 {/* Süslemeler - Görseldeki Çizimler */}
+                 <div className="h-24 flex items-center justify-center gap-12 opacity-10 filter grayscale pointer-events-none border-t border-[#c5a059]/10">
+                      <span className="text-4xl text-[#2e1a14]">🍽️</span>
+                      <span className="text-4xl text-[#2e1a14]">🧑‍🍳</span>
+                      <span className="text-4xl text-[#2e1a14]">🍷</span>
+                      <span className="text-4xl text-[#2e1a14]">🍰</span>
+                 </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto rounded-2xl border border-[#5d4037] shadow-xl">
-                <table className="w-full text-sm">
-                    <thead className="bg-[#3e2723] text-[#ffcc80]">
-                        <tr>
-                            <th className="px-4 py-3 text-left">#{t('admin.orderId')}</th>
-                            <th className="px-4 py-3 text-left">{t('admin.table')}</th>
-                            <th className="px-4 py-3 text-left">{t('admin.products')}</th>
-                            <th className="px-4 py-3 text-left">{t('admin.amount')}</th>
-                            <th className="px-4 py-3 text-left">{t('admin.status')}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filtered.map((order, idx) => {
-                            const cfg = STATUS_LABELS[order.status] || STATUS_LABELS.NEW;
-                            return (
-                                <tr key={order.id} className={`border-b border-[#5d4037] ${idx % 2 === 0 ? 'bg-[rgba(62,39,35,0.4)]' : 'bg-[rgba(62,39,35,0.2)]'} hover:bg-[rgba(93,64,55,0.5)] transition-colors`}>
-                                    <td className="px-4 py-3 text-[#ffcc80] font-bold">#{order.id}</td>
-                                    <td className="px-4 py-3 text-[#f5f5f5]">{order.tableNumber}</td>
-                                    <td className="px-4 py-3 text-[#d7ccc8]">
-                                        {order.items?.map(i => `${i.quantity}x ${i.product?.name}`).join(', ') || '-'}
-                                        {order.note && <div className="text-xs text-[#ffb74d] mt-1 italic">{t('admin.note')}: {order.note}</div>}
-                                    </td>
-                                    <td className="px-4 py-3 text-[#81c784] font-bold">₺{order.totalPrice?.toFixed(2)}</td>
-                                    <td className="px-4 py-3">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${cfg.color}`}>{cfg.label}</span>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        {filtered.length === 0 && (
-                            <tr><td colSpan="5" className="text-center py-10 text-[#a1887f]">{t('admin.noOrders')}</td></tr>
-                        )}
-                    </tbody>
-                </table>
+            {/* Süslemeler */}
+            <div className="absolute bottom-6 left-6 pointer-events-none flex items-end gap-2 z-20">
+                 <span className="text-4xl filter drop-shadow-lg">🍅</span>
+                 <span className="text-3xl filter drop-shadow-lg opacity-80">🌿</span>
             </div>
         </div>
     );

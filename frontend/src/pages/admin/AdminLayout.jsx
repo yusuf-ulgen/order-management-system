@@ -8,17 +8,39 @@ const AdminLayout = () => {
     const { t } = useTranslation();
 
     const navItems = [
-        { path: '/admin', label: t('admin.dashboard'), icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-        { path: '/admin/categories', label: t('admin.categories'), icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },
-        { path: '/admin/products', label: t('admin.products'), icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
-        { path: '/admin/tables', label: t('admin.tables'), icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
-        { path: '/admin/reports', label: t('admin.reports'), icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-        { path: '/admin/orders', label: t('admin.orderHistory'), icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-        { path: '/admin/password', label: t('admin.changePassword'), icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
-        { path: '/admin/users', label: t('admin.users'), icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-        { path: '/admin/settings', label: t('admin.settings'), icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+        { path: '/admin', label: 'Dashboard', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        )},
+        { path: '/admin/categories', label: 'Kategoriler', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        )},
+        { path: '/admin/products', label: 'Ürünler', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        )},
+        { path: '/admin/tables', label: 'Masalar', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        )},
+        { path: '/admin/reports', label: 'Raporlar', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        )},
+        { path: '/admin/orders', label: 'Sipariş Geçmişi', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        )},
+        { path: '/admin/password', label: 'Şifre Değiştir', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        )},
+        { path: '/admin/users', label: 'Kullanıcılar', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        )},
+        { path: '/admin/settings', label: 'Site Ayarları', icon: (active) => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        )},
     ];
 
+    const getPageTitle = () => {
+        const item = navItems.find(i => i.path === location.pathname);
+        return item ? item.label : 'Yönetim Paneli';
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('adminToken');
@@ -26,46 +48,93 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row theme-leaf-bg">
+        <div className="min-h-screen flex bg-[#061e14] font-serif overflow-hidden">
             {/* Sidebar */}
-            <aside className="theme-wood-bg text-white w-full md:w-64 flex-shrink-0 flex flex-col justify-between shadow-2xl z-20">
-                <div>
-                    <div className="p-6 flex items-center flex-col gap-3 justify-center border-b border-[rgba(0,0,0,0.3)] shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                        <div className="w-20 h-20 bg-[#2e4c27] rounded-full flex items-center justify-center border-4 border-[#81c784] shadow-inner mb-2 overflow-hidden">
-                            <svg className="w-12 h-12 text-[#dcedc8]" fill="currentColor" viewBox="0 0 24 24"><path d="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3M16,13A2,2 0 0,1 14,15H8A2,2 0 0,1 6,13V5H16Z" /></svg>
-                        </div>
-                    </div>
-                    <nav className="p-4 space-y-2 mt-4">
-                        {navItems.map(item => {
-                            const isActive = location.pathname === item.path;
-                            return (
-                                <Link
-                                    key={item.path}
-                                    to={item.path}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium ${isActive ? 'bg-[#4caf50] text-white shadow-lg border-b-2 border-[#388e3c]' : 'text-[#d7ccc8] hover:bg-[rgba(255,255,255,0.05)] hover:text-white'}`}
-                                >
-                                    <svg className="w-5 h-5 opacity-90 text-[#aed581]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon}></path></svg>
-                                    {item.label}
-                                </Link>
-                            )
-                        })}
-                    </nav>
+            <aside className="w-64 bg-[#2e1a14] flex-shrink-0 flex flex-col border-r border-black/20 shadow-2xl relative z-20">
+                <div className="absolute inset-0 bg-wood-pattern opacity-10 pointer-events-none"></div>
+                
+                <div className="py-12 flex justify-center border-b border-black/10">
+                     <div className="w-24 h-24 bg-[#061e14]/20 border-[3px] border-[#c5a059] rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
+                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f5f5dc" strokeWidth="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                     </div>
                 </div>
-                <div className="p-4 border-t border-[rgba(0,0,0,0.2)]">
+
+                <nav className="flex-1 py-6 space-y-1 relative z-10 overflow-y-auto hidden-scrollbar">
+                    {navItems.map(item => {
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`group flex items-center gap-4 px-6 py-3 transition-all relative ${isActive ? 'text-white' : 'text-[#f5f5dc]/50 hover:text-[#f5f5dc]'}`}
+                            >
+                                {isActive && (
+                                    <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#81c784] to-[#4caf50]/20 border-l-[4px] border-[#81c784] w-full"></div>
+                                )}
+                                <span className={`relative z-10 ${isActive ? 'text-white' : 'text-[#c5a059]/60 group-hover:text-[#c5a059]'}`}>
+                                    {item.icon(isActive)}
+                                </span>
+                                <span className="relative z-10 font-bold text-xs tracking-wide uppercase">{item.label}</span>
+                            </Link>
+                        )
+                    })}
+                </nav>
+
+                <div className="p-6 border-t border-black/10 relative z-10">
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 text-[#ffcc80] hover:bg-[rgba(0,0,0,0.1)] hover:text-white rounded-lg transition-colors font-medium"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 text-[#c5a059] hover:bg-black/10 rounded-xl transition-all font-bold text-xs uppercase tracking-widest border border-[#c5a059]/20"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                         {t('admin.logout')}
                     </button>
                 </div>
             </aside>
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-y-auto relative z-10 hidden-scrollbar">
-                <Outlet />
-            </main>
+            {/* Main Wrapper */}
+            <div className="flex-1 flex flex-col relative overflow-hidden">
+                
+                {/* Redesigned Header */}
+                <header className="h-24 bg-[#0a2e1f] flex items-center justify-between px-10 relative z-10 border-b border-[#c5a059]/30">
+                     <div className="flex items-center gap-6">
+                          <div className="w-14 h-14 bg-[#061e14]/40 border-2 border-[#c5a059] rounded-full flex items-center justify-center shadow-inner">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f5f5dc" strokeWidth="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                          </div>
+                          <div>
+                               <h2 className="text-2xl font-bold text-[#f5f5dc] tracking-tight">{getPageTitle()}</h2>
+                               <p className="text-[#c5a059] text-[10px] uppercase tracking-[0.2em] font-medium opacity-70">
+                                   {location.pathname.includes('settings') ? 'Restoran bilgilerini ve görsellerini buradan güncelleyin.' : 'Yönetim Paneli'}
+                               </p>
+                          </div>
+                     </div>
+                     <div className="flex items-center gap-4">
+                          <div className="border border-[#c5a059]/40 rounded-full px-3 py-1 text-[#c5a059] text-xs font-bold bg-black/10">TR</div>
+                          <button className="w-10 h-10 border border-[#c5a059]/30 rounded-full flex items-center justify-center text-[#c5a059] hover:bg-[#c5a059]/10 transition-colors">
+                               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                          </button>
+                     </div>
+                </header>
+
+                <div className="absolute inset-x-10 bottom-full h-[1px] bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+
+                {/* Content Area Border Decoration */}
+                <div className="px-10 mt-[-1px]">
+                     <div className="w-full flex items-center gap-4 mb-0.5">
+                         <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+                         <div className="rotate-45 w-1.5 h-1.5 border border-[#c5a059]"></div>
+                         <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-[#c5a059] to-transparent"></div>
+                     </div>
+                </div>
+
+                {/* Main Content */}
+                <main className="flex-1 overflow-y-auto relative z-10 p-10 bg-ornament bg-[#f9f7f2]/95 backdrop-blur-sm mx-10 mb-10 rounded-3xl border border-white/20 shadow-2xl custom-scrollbar">
+                    <Outlet />
+                </main>
+
+                {/* Background Food Ornaments */}
+                <div className="absolute bottom-10 right-10 opacity-20 pointer-events-none scale-150">🌿</div>
+                <div className="absolute bottom-10 left-10 opacity-20 pointer-events-none scale-150">🍅</div>
+            </div>
         </div>
     );
 };

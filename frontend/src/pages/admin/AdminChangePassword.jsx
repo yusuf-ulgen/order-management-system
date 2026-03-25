@@ -7,7 +7,7 @@ const AdminChangePassword = () => {
     const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
     const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState(null); // { text, success }
+    const [message, setMessage] = useState(null);
 
     const toggleVisibility = (field) => {
         setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
@@ -32,6 +32,7 @@ const AdminChangePassword = () => {
             });
             setMessage({ text: t('admin.passwordChangeSuccess'), success: true });
             setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setTimeout(() => setMessage(null), 3000);
         } catch (err) {
             setMessage({ text: t('admin.passwordChangeError'), success: false });
         } finally {
@@ -40,72 +41,80 @@ const AdminChangePassword = () => {
     };
 
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-8 bg-[#4e342e] theme-wood-bg p-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-2 border-[#3e2723]">
-                <h1 className="text-3xl font-bold text-[#f5f5f5] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] ml-2">{t('admin.changePassword')}</h1>
-            </div>
+        <div className="relative h-full flex flex-col">
+            {message && (
+                <div className={`absolute top-0 left-0 right-0 z-50 p-4 text-center font-bold animate-fade-in shadow-lg rounded-xl ${message.success ? 'bg-[#81c784] text-[#061e14]' : 'bg-red-500 text-white'}`}>
+                    {message.text}
+                </div>
+            )}
 
-            <div className="max-w-md">
-                <div className="theme-wood-card p-6 rounded-2xl shadow-xl border-2 border-[#5d4037]">
-                    <div className="theme-card-inner bg-[#fff8e1] p-6 rounded-xl">
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {['currentPassword', 'newPassword', 'confirmPassword'].map((field, i) => (
-                                <div key={field}>
-                                    <label className="block text-[#5d4037] font-bold text-sm mb-1">
-                                        {i === 0 ? t('admin.oldPassword') : i === 1 ? t('admin.newPassword') : t('admin.confirmNewPassword')}
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type={
-                                                field === 'currentPassword' ? (showPasswords.current ? 'text' : 'password') :
-                                                    field === 'newPassword' ? (showPasswords.new ? 'text' : 'password') :
-                                                        (showPasswords.confirm ? 'text' : 'password')
-                                            }
-                                            value={form[field]}
-                                            onChange={e => setForm(prev => ({ ...prev, [field]: e.target.value }))}
-                                            className="w-full border-2 border-[#d7ccc8] rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-[#5d4037] outline-none text-[#3e2723] bg-white"
-                                            placeholder={i === 0 ? '••••••••' : t('admin.staffPasswordPlaceholder')}
-                                            required
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => toggleVisibility(field === 'currentPassword' ? 'current' : field === 'newPassword' ? 'new' : 'confirm')}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5d4037] hover:text-[#3e2723] transition-colors p-2"
-                                            title={
-                                                (field === 'currentPassword' ? showPasswords.current : field === 'newPassword' ? showPasswords.new : showPasswords.confirm)
-                                                    ? t('admin.hide') : t('admin.show')
-                                            }
-                                        >
-                                            {(field === 'currentPassword' ? showPasswords.current : field === 'newPassword' ? showPasswords.new : showPasswords.confirm) ? (
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
-                                                </svg>
-                                            ) : (
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268-2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542z" />
-                                                </svg>
-                                            )}
-                                        </button>
+            <div className="flex-1 flex flex-col max-w-2xl">
+                <div className="bg-[#f9f7f2] rounded-[2.5rem] border border-[#c5a059]/30 shadow-xl p-10 relative overflow-hidden flex-1">
+                     <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                     
+                     <div className="space-y-8 relative z-10">
+                          {/* Başlık Alanı - Kart İçi */}
+                          <div className="flex items-center gap-4 mb-6">
+                               <div className="w-10 h-10 bg-[#2e1a14]/10 border border-[#c5a059]/40 rounded-full flex items-center justify-center text-[#c5a059]">✦</div>
+                               <h3 className="text-xl font-bold text-[#2e1a14] tracking-tight">{t('admin.changePassword')}</h3>
+                          </div>
+
+                          <form onSubmit={handleSubmit} className="space-y-6">
+                               {['currentPassword', 'newPassword', 'confirmPassword'].map((field, i) => (
+                                    <div key={field}>
+                                        <label className="block text-[10px] font-bold text-[#c5a059] mb-2 uppercase tracking-widest">
+                                            {i === 0 ? t('admin.oldPassword') : i === 1 ? t('admin.newPassword') : t('admin.confirmNewPassword')}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type={
+                                                    field === 'currentPassword' ? (showPasswords.current ? 'text' : 'password') :
+                                                        field === 'newPassword' ? (showPasswords.new ? 'text' : 'password') :
+                                                            (showPasswords.confirm ? 'text' : 'password')
+                                                }
+                                                value={form[field]}
+                                                onChange={e => setForm(prev => ({ ...prev, [field]: e.target.value }))}
+                                                className="w-full bg-white border border-[#c5a059]/20 rounded-2xl px-6 py-4 pr-14 focus:border-[#c5a059] focus:ring-0 outline-none font-bold text-[#2e1a14] shadow-inner placeholder:text-[#2e1a14]/20"
+                                                placeholder="••••••••"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => toggleVisibility(field === 'currentPassword' ? 'current' : field === 'newPassword' ? 'new' : 'confirm')}
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#c5a059] hover:text-[#2e1a14] transition-colors p-2"
+                                            >
+                                                {(field === 'currentPassword' ? showPasswords.current : field === 'newPassword' ? showPasswords.new : showPasswords.confirm) ? (
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                                ) : (
+                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                               ))}
 
-                            {message && (
-                                <div className={`p-3 rounded-xl text-sm font-bold border ${message.success ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
-                                    {message.success ? '✅' : '❌'} {message.text}
-                                </div>
-                            )}
+                               <div className="pt-6 flex justify-end">
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="px-10 py-4 bg-[#1a3a2a] hover:bg-[#061e14] text-[#f5f5dc] font-bold rounded-2xl shadow-2xl transition-all disabled:opacity-50 flex items-center gap-3 border border-[#c5a059]/40 group"
+                                    >
+                                        {loading ? (
+                                            <div className="animate-spin h-5 w-5 border-2 border-[#f5f5dc]/30 border-t-[#f5f5dc] rounded-full"></div>
+                                        ) : (
+                                            <span className="text-xl group-hover:scale-110 transition-transform">🔐</span>
+                                        )}
+                                        <span className="uppercase tracking-[0.2em] text-xs">Değişiklikleri Kaydet</span>
+                                    </button>
+                               </div>
+                          </form>
+                     </div>
 
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-[#4caf50] text-white py-3 rounded-xl font-bold border border-[#2e7d32] shadow hover:bg-[#388e3c] transition active:scale-95 disabled:opacity-50"
-                            >
-                                {loading ? t('common.loading') : `🔐 ${t('admin.changePassword')}`}
-                            </button>
-                        </form>
-                    </div>
+                     {/* Süslemeler */}
+                     <div className="absolute bottom-6 left-6 pointer-events-none flex items-end gap-2">
+                          <span className="text-4xl filter drop-shadow-lg">🍅</span>
+                          <span className="text-3xl filter drop-shadow-lg opacity-80">🌿</span>
+                     </div>
                 </div>
             </div>
         </div>

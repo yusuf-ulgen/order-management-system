@@ -22,7 +22,6 @@ const AdminSettings = () => {
     const fetchSettings = async () => {
         try {
             const response = await api.get('/settings');
-            // Merge response with our default keys to prevent undefined
             setSettings(prev => ({ ...prev, ...response.data }));
         } catch (error) {
             console.error('Failed to fetch settings:', error);
@@ -44,6 +43,7 @@ const AdminSettings = () => {
         try {
             await api.put('/settings', settings);
             setSuccessMessage(t('admin.settingsUpdateSuccess'));
+            setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Failed to update settings:', error);
             setErrorMessage(error.response?.data?.message || t('admin.settingsUpdateError'));
@@ -53,100 +53,111 @@ const AdminSettings = () => {
     };
 
     return (
-        <div className="p-2">
-            <div className="flex justify-between items-center mb-8 bg-[#4e342e] theme-wood-bg p-4 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] border-2 border-[#3e2723]">
-                <div className="ml-2">
-                    <h1 className="text-3xl font-bold text-[#f5f5f5] tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] leading-none">{t('admin.settingsTitle')}</h1>
-                    <p className="text-[#ffcc80] text-xs font-bold mt-1 opacity-80 uppercase tracking-widest">{t('admin.settingsDesc')}</p>
-                </div>
-            </div>
-
+        <div className="relative h-full flex flex-col">
             {successMessage && (
-                <div className="bg-[#e8f5e9] text-[#2e7d32] p-4 rounded-lg mb-6 border border-[#a5d6a7]">
+                <div className="absolute top-0 left-0 right-0 z-50 bg-[#81c784] text-[#061e14] p-4 text-center font-bold animate-fade-in shadow-lg rounded-xl">
                     {successMessage}
                 </div>
             )}
 
             {errorMessage && (
-                <div className="bg-[#ffebee] text-[#c62828] p-4 rounded-lg mb-6 border border-[#ef9a9a]">
+                <div className="absolute top-0 left-0 right-0 z-50 bg-red-500 text-white p-4 text-center font-bold animate-fade-in shadow-lg rounded-xl">
                     {errorMessage}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6 max-w-2xl border border-[rgba(0,0,0,0.05)]">
-                <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-semibold text-[#5d4037] mb-2">{t('admin.restaurantName')}</label>
-                        <input
-                            type="text"
-                            name="restaurant_name"
-                            value={settings.restaurant_name}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#81c784] focus:border-[#81c784] transition-colors"
-                        />
-                    </div>
+            <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+                <div className="bg-[#f9f7f2] rounded-3xl border border-[#c5a059]/30 shadow-xl p-10 relative overflow-hidden flex-1">
+                     <div className="absolute inset-0 bg-ornament opacity-5 pointer-events-none"></div>
+                     
+                     <div className="grid grid-cols-1 gap-8 relative z-10">
+                          {/* Restoran Adı */}
+                          <div>
+                               <label className="block text-sm font-bold text-[#2e1a14] mb-3 uppercase tracking-wider">{t('admin.restaurantName')}</label>
+                               <input
+                                   type="text"
+                                   name="restaurant_name"
+                                   value={settings.restaurant_name}
+                                   onChange={handleChange}
+                                   placeholder="Restoran Adını Giriniz"
+                                   className="w-full px-6 py-4 rounded-xl bg-white border border-[#c5a059]/20 focus:border-[#c5a059] focus:ring-0 transition-all font-medium text-[#2e1a14] shadow-inner"
+                               />
+                          </div>
 
-                    <div>
-                        <label className="block text-sm font-semibold text-[#5d4037] mb-2">{t('admin.logoUrl')}</label>
-                        <input
-                            type="text"
-                            name="restaurant_logo"
-                            value={settings.restaurant_logo}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#81c784] focus:border-[#81c784] transition-colors"
-                        />
-                        <p className="text-xs text-gray-400 mt-1">{t('admin.logoHelp')}</p>
-                    </div>
+                          {/* Logo */}
+                          <div>
+                               <label className="block text-sm font-bold text-[#2e1a14] mb-3 uppercase tracking-wider">{t('admin.logoUrl')}</label>
+                               <input
+                                   type="text"
+                                   name="restaurant_logo"
+                                   value={settings.restaurant_logo}
+                                   onChange={handleChange}
+                                   placeholder="Logo (Emoji veya URL)"
+                                   className="w-full px-6 py-4 rounded-xl bg-white border border-[#c5a059]/20 focus:border-[#c5a059] focus:ring-0 transition-all font-medium text-[#2e1a14] shadow-inner"
+                               />
+                               <p className="text-[10px] text-[#c5a059] mt-2 font-bold opacity-60 uppercase tracking-widest">{t('admin.logoHelp')}</p>
+                          </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-semibold text-[#5d4037] mb-2">{t('admin.contactPhone')}</label>
-                            <input
-                                type="text"
-                                name="contact_phone"
-                                value={settings.contact_phone}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#81c784] focus:border-[#81c784] transition-colors"
-                            />
-                        </div>
+                          <div className="grid grid-cols-2 gap-8">
+                               {/* Telefon */}
+                               <div>
+                                    <label className="block text-sm font-bold text-[#2e1a14] mb-3 uppercase tracking-wider">{t('admin.contactPhone')}</label>
+                                    <input
+                                        type="text"
+                                        name="contact_phone"
+                                        value={settings.contact_phone}
+                                        onChange={handleChange}
+                                        className="w-full px-6 py-4 rounded-xl bg-white border border-[#c5a059]/20 focus:border-[#c5a059] focus:ring-0 transition-all font-medium text-[#2e1a14] shadow-inner"
+                                    />
+                               </div>
 
-                        <div>
-                            <label className="block text-sm font-semibold text-[#5d4037] mb-2">{t('admin.contactAddress')}</label>
-                            <input
-                                type="text"
-                                name="contact_address"
-                                value={settings.contact_address}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#81c784] focus:border-[#81c784] transition-colors"
-                            />
-                        </div>
-                    </div>
+                               {/* Adres */}
+                               <div>
+                                    <label className="block text-sm font-bold text-[#2e1a14] mb-3 uppercase tracking-wider">{t('admin.contactAddress')}</label>
+                                    <input
+                                        type="text"
+                                        name="contact_address"
+                                        value={settings.contact_address}
+                                        onChange={handleChange}
+                                        className="w-full px-6 py-4 rounded-xl bg-white border border-[#c5a059]/20 focus:border-[#c5a059] focus:ring-0 transition-all font-medium text-[#2e1a14] shadow-inner"
+                                    />
+                               </div>
+                          </div>
 
-                    <div>
-                        <label className="block text-sm font-semibold text-[#5d4037] mb-2">{t('admin.heroBgUrl')}</label>
-                        <input
-                            type="text"
-                            name="home_hero_bg"
-                            value={settings.home_hero_bg}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#81c784] focus:border-[#81c784] transition-colors"
-                            placeholder={t('admin.heroBgHelp')}
-                        />
-                        {settings.home_hero_bg && (
-                            <img src={settings.home_hero_bg} alt="Preview" className="mt-2 h-20 w-full object-cover rounded-lg border" onError={(e) => e.target.style.display = 'none'} />
-                        )}
-                    </div>
-                </div>
+                          {/* Arkaplan */}
+                          <div>
+                               <label className="block text-sm font-bold text-[#2e1a14] mb-3 uppercase tracking-wider">{t('admin.heroBgUrl')}</label>
+                               <input
+                                   type="text"
+                                   name="home_hero_bg"
+                                   value={settings.home_hero_bg}
+                                   onChange={handleChange}
+                                   placeholder="Boş bırakılırsa varsayılan yeşil desen görünür"
+                                   className="w-full px-6 py-4 rounded-xl bg-white border border-[#c5a059]/20 focus:border-[#c5a059] focus:ring-0 transition-all font-medium text-[#2e1a14] shadow-inner"
+                               />
+                          </div>
+                     </div>
 
-                <div className="mt-8 flex justify-end">
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="px-6 py-3 bg-[#4caf50] hover:bg-[#388e3c] text-white font-bold rounded-lg shadow-md transition-colors disabled:opacity-50 flex items-center gap-2"
-                    >
-                        {loading && <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0A8 8 0 0120 4z"></path></svg>}
-                        {t('admin.saveSettings')}
-                    </button>
+                     <div className="mt-12 flex justify-end relative z-10">
+                          <button
+                              type="submit"
+                              disabled={loading}
+                              className="px-10 py-4 bg-[#1a3a2a] hover:bg-[#061e14] text-[#f5f5dc] font-bold rounded-xl shadow-2xl transition-all disabled:opacity-50 flex items-center gap-3 border border-[#c5a059]/40 group"
+                          >
+                              {loading ? (
+                                  <div className="animate-spin h-5 w-5 border-2 border-[#f5f5dc]/30 border-t-[#f5f5dc] rounded-full"></div>
+                              ) : (
+                                  <span className="text-xl group-hover:scale-110 transition-transform">⚙️</span>
+                              )}
+                              <span className="uppercase tracking-[0.2em] text-xs">Ayarları Kaydet</span>
+                          </button>
+                     </div>
+
+                     {/* Süslemeler - Görsele Sadık Kalınarak */}
+                     <div className="absolute bottom-6 left-6 pointer-events-none flex items-end gap-2">
+                          <span className="text-4xl filter drop-shadow-lg">🍅</span>
+                          <span className="text-3xl filter drop-shadow-lg opacity-80">🌿</span>
+                     </div>
                 </div>
             </form>
         </div>
