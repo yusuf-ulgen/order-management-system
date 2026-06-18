@@ -11,6 +11,7 @@ import com.example.backend.repository.RestaurantTableRepository;
 import com.example.backend.repository.SiteSettingsRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -37,25 +38,37 @@ public class DataSeeder implements CommandLineRunner {
         @Autowired
         private PasswordEncoder passwordEncoder;
 
+        @Value("${DEFAULT_ADMIN_USERNAME:admin}")
+        private String defaultAdminUsername;
+
+        @Value("${DEFAULT_ADMIN_PASSWORD:admin123}")
+        private String defaultAdminPassword;
+
+        @Value("${DEFAULT_WAITER_USERNAME:waiter}")
+        private String defaultWaiterUsername;
+
+        @Value("${DEFAULT_WAITER_PASSWORD:waiter123}")
+        private String defaultWaiterPassword;
+
         @SuppressWarnings("null")
         @Override
         public void run(String... args) {
                 System.out.println("🌱 DataSeeder: Starting database initialization...");
 
                 // 1. Create Admin User if not exists
-                if (!userRepository.existsByUsername("admin")) {
+                if (!userRepository.existsByUsername(defaultAdminUsername)) {
                         userRepository.save(User.builder()
-                                        .username("admin")
-                                        .password(passwordEncoder.encode("admin123"))
+                                        .username(defaultAdminUsername)
+                                        .password(passwordEncoder.encode(defaultAdminPassword))
                                         .role(User.Role.ADMIN)
                                         .active(true)
                                         .build());
-                        System.out.println("👤 DataSeeder: Admin user created (admin/admin123)");
+                        System.out.println("👤 DataSeeder: Admin user created (" + defaultAdminUsername + "/" + defaultAdminPassword + ")");
                 } else {
                         // Migrating plain text passwords if any
-                        userRepository.findByUsername("admin").ifPresent(admin -> {
-                                if ("admin123".equals(admin.getPassword())) {
-                                        admin.setPassword(passwordEncoder.encode("admin123"));
+                        userRepository.findByUsername(defaultAdminUsername).ifPresent(admin -> {
+                                if (defaultAdminPassword.equals(admin.getPassword())) {
+                                        admin.setPassword(passwordEncoder.encode(defaultAdminPassword));
                                         userRepository.save(admin);
                                         System.out.println(
                                                         "🔐 DataSeeder: Admin password migrated to encrypted format.");
@@ -64,14 +77,14 @@ public class DataSeeder implements CommandLineRunner {
                 }
 
                 // 2. Create Staff User if not exists
-                if (!userRepository.existsByUsername("waiter")) {
+                if (!userRepository.existsByUsername(defaultWaiterUsername)) {
                         userRepository.save(User.builder()
-                                        .username("waiter")
-                                        .password(passwordEncoder.encode("waiter123"))
+                                        .username(defaultWaiterUsername)
+                                        .password(passwordEncoder.encode(defaultWaiterPassword))
                                         .role(User.Role.STAFF)
                                         .active(true)
                                         .build());
-                        System.out.println("👤 DataSeeder: Staff user created (waiter/waiter123)");
+                        System.out.println("👤 DataSeeder: Staff user created (" + defaultWaiterUsername + "/" + defaultWaiterPassword + ")");
                 }
 
                 // 3. Site Settings

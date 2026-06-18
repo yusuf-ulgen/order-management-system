@@ -16,6 +16,9 @@ public class FileUploadController {
     @Value("${app.upload-dir:./uploads}")
     private String uploadDir;
 
+    @Value("${app.backend-url:http://localhost:8082}")
+    private String backendUrl;
+
     @PostMapping
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         // Create directory
@@ -34,7 +37,7 @@ public class FileUploadController {
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        String fileUrl = "http://localhost:8082/uploads/" + fileName;
+        String fileUrl = backendUrl + "/uploads/" + fileName;
         return ResponseEntity.ok(Map.of("url", fileUrl, "fileName", fileName));
     }
 }

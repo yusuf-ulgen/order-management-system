@@ -42,7 +42,7 @@ export default defineConfig({
         // Cache the menu, categories, tables API responses
         runtimeCaching: [
           {
-            urlPattern: /^https?:\/\/localhost:8082\/api\/(categories|products|tables)/,
+            urlPattern: /\/api\/(categories|products|tables)/,
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'api-cache',
@@ -50,7 +50,7 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /^https?:\/\/localhost:8082\/uploads\/.*/,
+            urlPattern: /\/uploads\/.*/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'images-cache',

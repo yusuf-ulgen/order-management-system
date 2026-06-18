@@ -64,7 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/debug/**").permitAll()
                         .requestMatchers("/api/orders/**").permitAll()
                         .requestMatchers("/api/waiter-calls/**").permitAll()
-                        .requestMatchers("/api/upload/**").permitAll()
+                        .requestMatchers("/api/upload/**").hasRole("ADMIN")
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/ping").permitAll()
 
